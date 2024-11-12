@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos Sintácticos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .group h2 {
+            margin: 0;
+        }
+
+        .response-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .response {
+            flex: 1;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .add-field, .check-button, .next-button, .help-button {
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .add-field:hover, .check-button:hover, .next-button:hover, .help-button:hover {
+            background-color: #218838;
+        }
+
+        .error {
+            border: 1px solid red;
+            background-color: #f8d7da;
+        }
+
+        .success {
+            border: 1px solid green;
+            background-color: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grupos Sintácticos</h1>
+        <div id="group-container"></div>
+        <button class="check-button" style="display: none;">Corregir</button>
+        <button class="next-button" style="display: none;">Siguiente</button>
+        <button class="help-button">Ayuda</button>
+    </div>
+
+    <script>
+        const groups = [
+            {
+                title: "Grupo Nominal (GN)",
+                functions: ["Sujeto", "Complemento Directo", "Atributo", "Término de un Complemento de Régimen", "Complemento Circunstancial", "Vocativo", "Agente"],
+                help: "Respuestas correctas: Sujeto, Complemento Directo, Atributo, Término de un Complemento de Régimen, Complemento Circunstancial, Vocativo, Agente."
+            },
+            {
+                title: "Grupo Adjetival (GAdj)",
+                functions: ["Complemento del Nombre", "Atributo", "Complemento Predicativo", "Complemento Circunstancial", "Complemento del Adjetivo"],
+                help: "Respuestas correctas: Complemento del Nombre, Atributo, Complemento Predicativo, Complemento Circunstancial, Complemento del Adjetivo."
+            },
+            {
+                title: "Grupo Preposicional (GPrep)",
+                functions: ["Complemento de Régimen", "Complemento del Nombre", "Complemento Indirecto", "Complemento Circunstancial", "Atributo"],
+                help: "Respuestas correctas: Complemento de Régimen, Complemento del Nombre, Complemento Indirecto, Complemento Circunstancial, Atributo."
+            },
+            {
+                title: "Grupo Adverbial (GAdv)",
+                functions: ["Complemento Circunstancial", "Complemento del Adjetivo", "Complemento del Adverbio", "Atributo", "Complemento Predicativo"],
+                help: "Respuestas correctas: Complemento Circunstancial, Complemento del Adjetivo, Complemento del Adverbio, Atributo, Complemento Predicativo."
+            },
+            {
+                title: "Grupo Verbal (GV)",
+                functions: [" Predicado", "Predicado Nominal", "Predicado Verbal", "Verbo de Oración Intransitiva"],
+                help: "Respuestas correctas: Predicado, Predicado Nominal, Predicado Verbal, Verbo de Oración Intransitiva."
+            }
+        ];
+
+        let currentGroup = 0;
+        const groupContainer = document.getElementById('group-container');
+        const checkButton = document.querySelector('.check-button');
+        const nextButton = document.querySelector('.next-button');
+
+        function displayGroup() {
+            const group = groups[currentGroup];
+            groupContainer.innerHTML = `
+                <div class="group">
+                    <h2>${group.title}</h2>
+                    <div id="responses"></div>
+                    <button class="add-field">Agregar Función Sintáctica</button>
+                </div>
+            `;
+            checkButton.style.display = 'block';
+            nextButton.style.display = 'none';
+            document.querySelector('.add-field').addEventListener('click', addResponseField);
+            checkButton.addEventListener('click', () => validateAllResponses(group.functions));
+        }
+
+        function addResponseField() {
+            const responsesDiv = document.getElementById('responses');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'response';
+            input.placeholder = 'Introduce función sintáctica';
+            responsesDiv.appendChild(input);
+        }
+
+        function validateAllResponses(correctAnswers) {
+            const inputs = document.querySelectorAll('.response');
+            inputs.forEach(input => {
+                const userInput = input.value.trim();
+                if (correctAnswers.includes(userInput)) {
+                    input.classList.add('success');
+                    input.classList.remove('error');
+                } else {
+                    input.classList.add('error');
+                    input.classList.remove('success');
+                }
+            });
+            nextButton.style.display = 'block';
+        }
+
+        nextButton.addEventListener('click', function() {
+            currentGroup++;
+            if (currentGroup < groups.length) {
+                displayGroup();
+            } else {
+                alert('Has completado todos los grupos sintácticos.');
+                nextButton.style.display = 'none';
+            }
+        });
+
+        document.querySelector('.help-button').addEventListener('click', function() {
+            alert(groups[currentGroup].help);
+        });
+
+        // Shuffle groups for random order
+        groups.sort(() => Math.random() - 0.5);
+        displayGroup();
+    </script>
+</body>
+</html>
