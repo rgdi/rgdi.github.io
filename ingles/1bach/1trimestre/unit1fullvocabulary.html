@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English vocabulary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+        }
+        .definition {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Vocabulario </h1>
+
+    <div class="stats">
+        <p>Correctas: <span id="correctCount">0</span></p>
+        <p>Quedan: <span id="remainingCount">24</span></p>
+    </div>
+
+    <div class="card">
+        <div class="definition" id="definition">To jump on one foot</div>
+        <input type="text" id="answer" placeholder="Escribe la palabra...">
+        <button onclick="checkAnswer()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        const words = [
+            { word: 'Hop', definition: 'To jump on one foot' },
+            { word: 'Wander', definition: 'To walk around without any clear purpose' },
+            { word: 'Swing', definition: 'To move easily and without stopping in the air' },
+            { word: 'Tiptoe', definition: 'To walk on your toes, especially in order not to make a noise' },
+            { word: 'Dive', definition: 'To jump into water' },
+            { word: 'Climb', definition: 'To go up, or to go towards the top of something' },
+            { word: 'Rush', definition: 'To (cause to) go or do something very quickly' },
+            { word: 'Leap', definition: 'To make a large jump from one place to another' },
+            { word: 'Crawl', definition: 'To move slowly on hands and knees' },
+            { word: 'Stagger', definition: 'To walk or move with difficulty as if you are going to fall' },
+            { word: 'Ashamed', definition: 'Feeling extremely embarrassed about something you have done' },
+            { word: 'Puzzled', definition: 'Feeling confused because you do not understand something' },
+            { word: 'Desperate', definition: 'Feeling the need for or wanting something very much' },
+            { word: 'Guilty', definition: 'Feeling worried or unhappy because you have done something wrong' },
+            { word: 'Awkward', definition: 'Feeling embarrassment or uncomfortable' },
+            { word: 'Stuck', definition: 'Feeling you are in a difficult situation and unable to change or get away from it' },
+            { word: 'Creep up', definition: 'Move close to something very quietly' },
+            { word: 'Detect', definition: 'To discover or notice something, especially something that is difficult to see, smell, etc.' },
+            { word: 'Presence', definition: 'The fact of being in a place' },
+            { word: 'Fist', definition: 'A hand closed into a ball' },
+            { word: 'Pitch', definition: 'The sound made at a particular level' },
+            { word: 'Soar', definition: 'To fly or rise high in the air' },
+            { word: 'Tumble', definition: 'To fall suddenly' },
+            { word: 'Slide', definition: 'To move smoothly along a surface while maintaining continuous contact' },
+            { word: 'March', definition: 'To walk in a steady repeated manner (military)' },
+            { word: 'Happy ending', definition: 'A positive or satisfying conclusion to a story.' },
+            { word: 'Put up with', definition: 'To tolerate or endure something unpleasant.' },
+            { word: 'Rescue teams', definition: 'Groups organized to save people in danger.' },
+            { word: 'Wilderness selfish', definition: 'Prioritizing one\'s own needs in a natural setting.' },
+            { word: 'Will to live', definition: 'The determination to survive.' },
+            { word: 'Seek out', definition: 'To search for or look for something.' },
+            { word: 'The fittest', definition: 'Those best adapted to survive in a given environment.' },
+            { word: 'Shelter', definition: 'A place that provides protection from the elements.' },
+            { word: 'Skills', definition: 'Abilities or expertise in a particular area.' },
+            { word: 'Challenge', definition: 'A difficult task or situation that requires effort.' },
+            { word: 'Safe and sound', definition: 'Unharmed and in a secure condition.' },
+            { word: 'Wilderness', definition: 'A natural area that is uninhabited and uncultivated.' },
+            { word: 'Hut', definition: 'A small, simple shelter or dwelling.' },
+            { word: 'Unequipped', definition: 'Lacking necessary equipment or supplies.' },
+            { word: 'Right in the middle of', definition: 'Exactly at the center of something.' },
+            { word: 'Supplies', definition: 'Items needed for a particular purpose.' },
+            { word: 'Manage with', definition: 'To cope or handle a situation with limited resources.' },
+            { word: 'Bring up', definition: 'To raise a topic or subject for discussion.' },
+            { word: 'Tackle', definition: 'To confront or deal with a problem.' },
+            { word: 'Endure', definition: 'To suffer through something difficult without giving up.' },
+            { word: 'Grab', definition: 'To seize or take hold of something quickly.' },
+            { word: 'Rainstorm', definition: 'A storm characterized by heavy rain.' },
+            { word: 'Threaten to', definition: 'To express an intention to cause harm or trouble.' },
+            { word: 'Overturn', definition: 'To flip or turn something upside down.' },
+            { word: 'Hold on', definition: 'To grasp or cling to something tightly.' },
+            { word: 'Canvas', definition: 'A strong fabric used for making tents or paintings.' },
+            { word: 'Tarpaulin', definition: 'A large sheet of strong, flexible material used for protection.' },
+            { word: 'Sip', definition: 'To drink a small amount of liquid slowly.' },
+            { word: 'Gather', definition: 'To collect or assemble things together.' },
+            { word: 'Give up', definition: 'To stop trying.' },
+            { word: 'Weep', definition: 'To cry or shed tears.' },
+            { word: 'Clamber', definition: 'To climb awkwardly or with difficulty.' },
+            { word: 'Head out', definition: 'To leave or set off for a destination.' },
+            { word: 'Run out of', definition: 'To deplete a supply of something.' },
+            { word: 'Drift', definition: 'To be carried slowly by a current of air or water.' },
+            { word: 'Crouch', definition: 'To bend down with the knees close to the ground.' },
+            { word: 'Seabird', definition: 'A bird that lives near or on the sea.' },
+            { word: 'Leap up', definition: 'To jump or spring upward.' }
+        ];
+
+        let correctCount = 0;
+        let remainingCount = words.length;
+        let currentWordIndex = 0;
+        let remainingWords = [...words]; // Clonar la lista para mantener el seguimiento de las palabras restantes
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Mezclar las palabras inicialmente
+        shuffle(remainingWords);
+
+        function updateCard() {
+            if (remainingWords.length > 0) {
+                currentWordIndex = 0;
+                document.getElementById('definition').textContent = remainingWords[currentWordIndex].definition;
+                document.getElementById('answer').value = '';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+            } else {
+                alert('¡Has completado todas las palabras!');
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+            if (userAnswer.toLowerCase() === remainingWords[currentWordIndex].word.toLowerCase()) {
+                feedback.textContent = 'Correcto!';
+                feedback.className = 'feedback correct';
+                correctCount++;
+                remainingWords.splice(currentWordIndex, 1); // Eliminar palabra correcta
+                document.getElementById('correctCount').textContent = correctCount;
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+                setTimeout(updateCard, 1000); // Cambiar de tarjeta después de 1 segundo
+            } else {
+                feedback.textContent = 'Incorrecto! Intenta de nuevo.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showSolution() {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = `La palabra correcta es: ${remainingWords[currentWordIndex].word}`;
+            feedback.className = 'feedback correct';
+        }
+        // Detectar la tecla "Enter" para comprobar la respuesta
+        document.getElementById('answer').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        // Iniciar el juego con la primera palabra
+        updateCard();
+    </script>
+
+</body>
+</html>
