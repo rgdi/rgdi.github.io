@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Relaciones trigonométricas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+      padding: 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #dddddd;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    th {
+      background-color: #0074D9;
+      color: white;
+    }
+
+    input {
+      width: 100%;
+      max-width: 100px;
+      padding: 6px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .correcto {
+      background-color: #2ECC40;
+      color: white;
+    }
+
+    .incorrecto {
+      background-color: #FF4136;
+      color: white;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      background-color: #0074D9;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    .respuesta {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 20px;
+    }
+
+    /* Estilos para móviles */
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 0.875rem;
+        padding: 10px;
+      }
+
+      input {
+        font-size: 0.875rem;
+        padding: 5px;
+      }
+
+      button {
+        font-size: 0.875rem;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Trigonometric Table Game</h2>
+
+  <table>
+    <tr>
+      <th>Ángulo</th>
+      <th>sen</th>
+      <th>cos</th>
+    </tr>
+    <tr>
+      <td>0°</td>
+      <td><input type="text" id="0-sen"></td>
+      <td><input type="text" id="0-cos"></td>
+    </tr>
+    <tr>
+      <td>30°</td>
+      <td><input type="text" id="30-sen"></td>
+      <td><input type="text" id="30-cos"></td>
+    </tr>
+    <tr>
+      <td>45°</td>
+      <td><input type="text" id="45-sen"></td>
+      <td><input type="text" id="45-cos"></td>
+    </tr>
+    <tr>
+      <td>60°</td>
+      <td><input type="text" id="60-sen"></td>
+      <td><input type="text" id="60-cos"></td>
+    </tr>
+    <tr>
+      <td>90°</td>
+      <td><input type="text" id="90-sen"></td>
+      <td><input type="text" id="90-cos"></td>
+    </tr>
+    <tr>
+      <td>180°</td>
+      <td><input type="text" id="180-sen"></td>
+      <td><input type="text" id="180-cos"></td>
+    </tr>
+  </table>
+
+  <div class="respuesta">
+    <button id="helpButton" onclick="showHelp()">Ayuda</button>
+    <button onclick="checkAnswers()">Comprobar</button>
+  </div>
+
+  <script>
+    const correctAnswers = {
+      '0-sen': 0,
+      '0-cos': 1,
+      '30-sen': 0.5,
+      '30-cos': Math.sqrt(3) / 2,
+      '45-sen': Math.sqrt(2) / 2,
+      '45-cos': Math.sqrt(2) / 2,
+      '60-sen': Math.sqrt(3) / 2,
+      '60-cos': 0.5,
+      '90-sen': 1,
+      '90-cos': 0,
+      '180-sen': 0,
+      '180-cos': -1
+    };
+
+    function parseInput(input) {
+      if (input.includes('r(')) {
+        const rootMatch = input.match(/r\(([^)]+)\)/);
+        const numerator = rootMatch ? Math.sqrt(parseFloat(rootMatch[1])) : 0;
+        const denominator = input.includes('/') ? parseFloat(input.split('/')[1]) : 1;
+        return numerator / denominator;
+      }
+      if (input.includes('/')) {
+        const [numerator, denominator] = input.split('/').map(Number);
+        return numerator / denominator;
+      }
+      return parseFloat(input);
+    }
+
+    function checkAnswers() {
+      for (const [key, value] of Object.entries(correctAnswers)) {
+        const userInput = document.getElementById(key).value.trim();
+        const userAnswer = parseInput(userInput);
+
+        if (Math.abs(userAnswer - value) < 1e-10) {
+          document.getElementById(key).classList.add('correcto');
+          document.getElementById(key).classList.remove('incorrecto');
+        } else {
+          document.getElementById(key).classList.add('incorrecto');
+          document.getElementById(key).classList.remove('correcto');
+        }
+      }
+    }
+
+    function showHelp() {
+      const helpText = `
+        Ayuda: Introduce las respuestas en formato decimal, fracción o raíz cuadrada.\n
+        Respuestas correctas:\n
+        0°: sen(0) = 0, cos(0) = 1\n
+        30°: sen(30) = 0.5, cos(30) = √3/2\n
+        45°: sen(45) = √2/2, cos(45) = √2/2\n
+        60°: sen(60) = √3/2, cos(60) = 0.5\n
+        90°: sen(90) = 1, cos(90) = 0\n
+        180°: sen(180) = 0, cos(180) = -1
+      `;
+      alert(helpText);
+    }
+  </script>
+
+</body>
+</html>
