@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula Número Combinatorio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+        .combination {
+            font-size: 24px;
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+        }
+        .combination .top {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+        }
+        .combination .bottom {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+        }
+        .formula {
+            margin-top: 50px;
+            font-size: 20px;
+        }
+        input {
+            width: 50px;
+            padding: 5px;
+            font-size: 18px;
+            margin: 0 5px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input.correct {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        input.incorrect {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .feedback.correct {
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Título principal -->
+    <h1>Fórmula de Números Combinatorios</h1>
+
+    <div class="card">
+        <!-- Presentación del número combinatorio -->
+        <p>
+            <span class="combination">
+                <span class="top"><input type="text" id="m" maxlength="2" oninput="autoCheck('m', 'm')"></span>
+                C
+                <span class="bottom"><input type="text" id="n" maxlength="2" oninput="autoCheck('n', 'n')"></span>
+            </span>
+        </p>
+
+        <!-- Fórmula del número combinatorio -->
+        <div class="formula">
+            
+            <input type="text" id="formula_m" maxlength="3" oninput="autoCheck('formula_m', 'm!')"> <br>
+            <hr style="width: 80%; margin: 10px auto;" />
+            <input type="text" id="formula_n" maxlength="3" oninput="autoCheck('formula_n', 'n!')"> * 
+            (<input type="text" id="formula_m_n" maxlength="8" oninput="autoCheck('formula_m_n', 'm-n!')">)
+        </div>
+
+        <!-- Botón de Verificación -->
+        <button onclick="checkAnswers()">Verificar</button>
+
+        <!-- Botón de Ayuda -->
+        <button onclick="showHelp()" style="background-color: #28a745; margin-left: 10px;">Ayuda</button>
+
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        // Función para verificar automáticamente cada campo
+        function autoCheck(fieldId, correctValue) {
+            const inputField = document.getElementById(fieldId);
+            if (inputField.value.trim() === correctValue) {
+                inputField.classList.remove('incorrect');
+                inputField.classList.add('correct');
+            } else {
+                inputField.classList.remove('correct');
+                inputField.classList.add('incorrect');
+            }
+        }
+
+        // Función para verificar si todas las respuestas son correctas
+        function checkAnswers() {
+            const feedback = document.getElementById('feedback');
+            const inputs = document.querySelectorAll('input');
+            let allCorrect = true;
+
+            inputs.forEach(input => {
+                if (!input.classList.contains('correct')) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                feedback.textContent = "¡Correcto!";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "Revisa tus respuestas.";
+                feedback.className = "feedback incorrect";
+            }
+        }
+
+        // Función para mostrar las respuestas correctas (Ayuda)
+        function showHelp() {
+            document.getElementById('m').value = 'm';
+            document.getElementById('n').value = 'n';
+            document.getElementById('formula_m').value = 'm!';
+            document.getElementById('formula_n').value = 'n!';
+            document.getElementById('formula_m_n').value = 'm-n!';
+            // Marcar todas las respuestas como correctas
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+            });
+            document.getElementById('feedback').textContent = "Ayuda aplicada: todas las respuestas están correctas.";
+            document.getElementById('feedback').className = "feedback correct";
+        }
+    </script>
+
+</body>
+</html>

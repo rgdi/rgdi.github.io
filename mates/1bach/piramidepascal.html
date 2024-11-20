@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Triángulo de Pascal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .triangle-container {
+            text-align: center;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 50px;
+            padding: 5px;
+            font-size: 18px;
+            margin: 0 5px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input.correct {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        input.incorrect {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .feedback.correct {
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Práctica: Triángulo de Pascal</h1>
+
+    <!-- Contenedor para el triángulo de Pascal -->
+    <div class="triangle-container" id="triangle-container"></div>
+
+    <!-- Botones para agregar filas y ayuda -->
+    <button onclick="addRow()">Agregar fila</button>
+    <button onclick="showHelp()" style="background-color: #28a745; margin-left: 10px;">Ayuda</button>
+
+    <div id="feedback" class="feedback"></div>
+
+    <script>
+        let currentRow = 0;
+
+        // Función para calcular el valor de un número combinatorio C(n, k)
+        function combination(n, k) {
+            if (k === 0 || k === n) return 1;
+            return combination(n - 1, k - 1) + combination(n - 1, k);
+        }
+
+        // Función para agregar una fila al Triángulo de Pascal
+        function addRow() {
+            const container = document.getElementById('triangle-container');
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('row');
+
+            for (let i = 0; i <= currentRow; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = '3';
+                input.dataset.correctValue = combination(currentRow, i);
+                input.oninput = function() {
+                    autoCheck(input);
+                };
+                rowDiv.appendChild(input);
+            }
+
+            container.appendChild(rowDiv);
+            currentRow++;
+        }
+
+        // Función para verificar automáticamente cada campo
+        function autoCheck(input) {
+            const correctValue = input.dataset.correctValue;
+            if (input.value.trim() === correctValue) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+            } else {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+            }
+        }
+
+        // Función para mostrar las respuestas correctas (Ayuda)
+        function showHelp() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.value = input.dataset.correctValue;
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+            });
+            document.getElementById('feedback').textContent = "Ayuda aplicada: todas las respuestas están correctas.";
+            document.getElementById('feedback').className = "feedback correct";
+        }
+    </script>
+
+</body>
+</html>

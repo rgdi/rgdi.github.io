@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Fórmula del Término del Binomio de Newton</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .formula-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 600px;
+        }
+        .formula {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+            font-size: 18px;
+            margin: 0 5px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input.correct {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        input.incorrect {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .feedback.correct {
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Práctica: Término del Binomio de Newton</h1>
+
+    <div class="formula-container">
+        <!-- Fórmula del término del binomio de Newton con huecos -->
+        <div class="formula">
+            $$ (-1)^{k-1} \times \binom{m}{k-1} \times a^{m-(k-1)} \times b^{k-1} $$
+        </div>
+
+        <!-- Aquí están los huecos para que el usuario ponga sus respuestas -->
+        <div>
+            \( (-1)^{\) 
+            <input type="text" id="k_minus_1" maxlength="2" oninput="autoCheck('k_minus_1', 'k-1')"> 
+            \( } \times \binom{\)
+            <input type="text" id="m" maxlength="2" oninput="autoCheck('m', 'm')"> 
+            \( }{\)
+            <input type="text" id="k_minus_1_binom" maxlength="2" oninput="autoCheck('k_minus_1_binom', 'k-1')"> 
+            \( } \times a^{\)
+            <input type="text" id="a_exponent" maxlength="3" oninput="autoCheck('a_exponent', 'm-(k-1)')"> 
+            \( } \times b^{\)
+            <input type="text" id="b_exponent" maxlength="3" oninput="autoCheck('b_exponent', 'k-1')"> 
+            \( } \)
+        </div>
+
+        <!-- Botón para verificar -->
+        <button onclick="checkAnswers()">Verificar</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        // Función para verificar automáticamente cada campo
+        function autoCheck(fieldId, correctValue) {
+            const inputField = document.getElementById(fieldId);
+            if (inputField.value.trim() === correctValue) {
+                inputField.classList.remove('incorrect');
+                inputField.classList.add('correct');
+            } else {
+                inputField.classList.remove('correct');
+                inputField.classList.add('incorrect');
+            }
+        }
+
+        // Función para verificar si todas las respuestas son correctas
+        function checkAnswers() {
+            const feedback = document.getElementById('feedback');
+            const inputs = document.querySelectorAll('input');
+            let allCorrect = true;
+
+            inputs.forEach(input => {
+                if (!input.classList.contains('correct')) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                feedback.textContent = "¡Correcto!";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "Revisa tus respuestas.";
+                feedback.className = "feedback incorrect";
+            }
+        }
+    </script>
+
+</body>
+</html>

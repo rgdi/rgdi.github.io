@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmulas Trigonométricas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+        .equation {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 50px;
+            padding: 8px;
+            font-size: 16px;
+            margin: 0 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .correct {
+            border-color: green;
+            color: green;
+        }
+        .incorrect {
+            border-color: red;
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            margin: 0 5px;
+        }
+        .fraction input {
+            width: 30px;
+        }
+        .fraction div {
+            border-bottom: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fórmulas Trigonométricas</h1>
+
+    <div class="card">
+        <div class="equation">
+            sen²α + cos²α = 
+            <input type="text" id="eq1" maxlength="1" oninput="autoCheck('eq1', '1')">
+        </div>
+        <div class="equation">
+            tgα = <BR>
+            <div class="fraction">
+                <input type="text" id="numerator" maxlength="3" oninput="autoCheck('numerator', 'sen')"> α
+                <div></div>
+                <input type="text" id="denominator" maxlength="3" oninput="autoCheck('denominator', 'cos')"> α
+            </div>
+        </div>
+        <div class="equation">
+            1 + tan²α = 
+            <input type="text" id="eq3" maxlength="3" oninput="autoCheck('eq3', 'sec')">²α
+        </div>
+        <div class="equation">
+            1 + 
+            <input type="text" id="cotan" maxlength="5" oninput="autoCheck('cotan', 'cotan')">²α = 
+            <input type="text" id="cosec" maxlength="6" oninput="autoCheck('cosec', 'cosec')">²α
+        </div>
+        <button onclick="checkAnswers()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            const eq1 = document.getElementById('eq1').value.trim();
+            const numerator = document.getElementById('numerator').value.trim();
+            const denominator = document.getElementById('denominator').value.trim();
+            const eq3 = document.getElementById('eq3').value.trim();
+            const cotan = document.getElementById('cotan').value.trim();
+            const cosec = document.getElementById('cosec').value.trim();
+            const feedback = document.getElementById('feedback');
+            
+            if (eq1 === "1" && numerator === "sen" && denominator === "cos" && eq3 === "sec" && cotan === "cotan" && cosec === "cosec") {
+                feedback.textContent = "¡Correcto!";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "¡Incorrecto! Revisa tus respuestas.";
+                feedback.className = "feedback incorrect";
+            }
+        }
+
+        function showSolution() {
+            document.getElementById('eq1').value = "1";
+            document.getElementById('numerator').value = "sen";
+            document.getElementById('denominator').value = "cos";
+            document.getElementById('eq3').value = "sec";
+            document.getElementById('cotan').value = "cotan";
+            document.getElementById('cosec').value = "cosec";
+
+            autoCheck('eq1', '1');
+            autoCheck('numerator', 'sen');
+            autoCheck('denominator', 'cos');
+            autoCheck('eq3', 'sec');
+            autoCheck('cotan', 'cotan');
+            autoCheck('cosec', 'cosec');
+        }
+
+        function autoCheck(fieldId, correctValue) {
+            const inputField = document.getElementById(fieldId);
+            if (inputField.value.trim() === correctValue) {
+                inputField.classList.remove('incorrect');
+                inputField.classList.add('correct');
+            } else {
+                inputField.classList.remove('correct');
+                inputField.classList.add('incorrect');
+            }
+        }
+    </script>
+
+</body>
+</html>

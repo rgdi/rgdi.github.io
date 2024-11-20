@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema del Coseno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input {
+            width: 30px;
+            padding: 8px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 2px;
+            transition: border-color 0.3s;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .help-button {
+            background-color: #28a745;
+        }
+        .help-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fórmulas del Teorema del Coseno</h1>
+    <div class="card">
+        <h2 id="question-title">Completa la fórmula</h2>
+        <div id="formula-container"></div>
+        <button onclick="submitForm()">Enviar</button>
+        <button class="help-button" onclick="showHelp()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        const formulas = [
+            {
+                text: 'c² = a² + b² - 2ab * cos(γ)',
+                placeholders: ['a', 'b', 'a', 'b']
+            },
+            {
+                text: 'a² = b² + c² - 2bc * cos(α)',
+                placeholders: ['b', 'c', 'b', 'c']
+            },
+            {
+                text: 'b² = a² + c² - 2ac * cos(β)',
+                placeholders: ['a', 'c', 'a', 'c']
+            }
+        ];
+
+        let selectedFormula = {};
+
+        function loadQuestion() {
+            const container = document.getElementById('formula-container');
+            container.innerHTML = ''; // Limpia el contenedor
+            const randomIndex = Math.floor(Math.random() * formulas.length);
+            selectedFormula = formulas[randomIndex];
+
+            const parts = selectedFormula.text.split(/([abc²]+)/);
+            let inputIndex = 0;
+
+            parts.forEach(part => {
+                if (selectedFormula.placeholders.includes(part)) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.id = `input-${inputIndex}`;
+                    input.dataset.correctValue = part;
+                    input.oninput = () => validateInput(input);
+                    container.appendChild(input);
+                    inputIndex++;
+                } else {
+                    const span = document.createElement('span');
+                    span.textContent = part;
+                    container.appendChild(span);
+                }
+            });
+        }
+
+        function validateInput(input) {
+            const correctValue = input.dataset.correctValue;
+            if (input.value === correctValue) {
+                input.style.borderColor = 'green';
+            } else {
+                input.style.borderColor = 'red';
+            }
+        }
+
+        function submitForm() {
+            const inputs = document.querySelectorAll('#formula-container input');
+            let correct = true;
+
+            inputs.forEach(input => {
+                const correctValue = input.dataset.correctValue;
+                if (input.value !== correctValue) {
+                    correct = false;
+                    input.style.borderColor = 'red';
+                } else {
+                    input.style.borderColor = 'green';
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            if (correct) {
+                feedback.textContent = '¡Fórmula correcta!';
+                feedback.className = 'feedback';
+            } else {
+                feedback.textContent = 'La fórmula tiene errores. Intenta de nuevo.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showHelp() {
+            alert("Las fórmulas del Teorema del Coseno son:\n" +
+                "1. c² = a² + b² - 2ab * cos(γ)\n" +
+                "2. a² = b² + c² - 2bc * cos(α)\n" +
+                "3. b² = a² + c² - 2ac * cos(β)");
+        }
+
+        // Cargar una pregunta al iniciar
+        loadQuestion();
+    </script>
+</body>
+</html>

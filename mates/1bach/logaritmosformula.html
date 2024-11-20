@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula de logaritmos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+        .equation {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 50px;
+            padding: 8px;
+            font-size: 16px;
+            margin: 0 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .correct {
+            border-color: green;
+            color: green;
+        }
+        .incorrect {
+            border-color: red;
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .arrow {
+            font-size: 24px;
+            color: #555;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Formula de logaritmos</h1>
+
+    <div class="card">
+        <div class="equation">
+            log<sub><sub><input type="text" id="a" maxlength="2" oninput="autoCheck('a', 'a')"></sub> </sub>
+            <input type="text" id="x" maxlength="2" oninput="autoCheck('x', 'x')"> = 
+            <input type="text" id="y" maxlength="2" oninput="autoCheck('y', 'y')">
+            <span class="arrow">⇔</span>
+            <input type="text" id="base" maxlength="2" oninput="autoCheck('base', 'a')"> 
+            ^<sup><input type="text" id="exp" maxlength="2" oninput="autoCheck('exp', 'y')"></sup> = 
+            <input type="text" id="result" maxlength="2" oninput="autoCheck('result', 'x')">
+        </div>
+        <button onclick="checkAnswers()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        // Función para comprobar las respuestas manualmente
+        function checkAnswers() {
+            const a = document.getElementById('a').value.trim();
+            const x = document.getElementById('x').value.trim();
+            const y = document.getElementById('y').value.trim();
+            const base = document.getElementById('base').value.trim();
+            const exp = document.getElementById('exp').value.trim();
+            const result = document.getElementById('result').value.trim();
+            const feedback = document.getElementById('feedback');
+            
+            if (a === "a" && x === "x" && y === "y" && base === "a" && exp === "y" && result === "x") {
+                feedback.textContent = "¡Correcto!";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "¡Incorrecto! Revisa tus respuestas.";
+                feedback.className = "feedback incorrect";
+            }
+        }
+
+        // Función para mostrar la solución (ayuda)
+        function showSolution() {
+            document.getElementById('a').value = "a";
+            document.getElementById('x').value = "x";
+            document.getElementById('y').value = "y";
+            document.getElementById('base').value = "a";
+            document.getElementById('exp').value = "y";
+            document.getElementById('result').value = "x";
+
+            autoCheck('a', 'a');
+            autoCheck('x', 'x');
+            autoCheck('y', 'y');
+            autoCheck('base', 'a');
+            autoCheck('exp', 'y');
+            autoCheck('result', 'x');
+        }
+
+        // Función para verificar automáticamente cada campo cuando se cambia su contenido
+        function autoCheck(fieldId, correctValue) {
+            const inputField = document.getElementById(fieldId);
+            if (inputField.value.trim() === correctValue) {
+                inputField.classList.remove('incorrect');
+                inputField.classList.add('correct');
+            } else {
+                inputField.classList.remove('correct');
+                inputField.classList.add('incorrect');
+            }
+        }
+    </script>
+
+</body>
+</html>
