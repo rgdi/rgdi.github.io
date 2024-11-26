@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trim 1-2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+        }
+        .definition {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Vocabulario Trimestre 1 2024</h1>
+
+    <div class="stats">
+        <p>Correctas: <span id="correctCount">0</span></p>
+        <p>Quedan: <span id="remainingCount">10</span></p>
+        <p>Grupo: <span id="groupCount">1</span></p>
+    </div>
+
+    <div class="card">
+        <div class="definition" id="definition">To collect or assemble things together.</div>
+        <input type="text" id="answer" placeholder="Escribe la palabra...">
+        <button onclick="checkAnswer()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <button onclick="previousGroup()">Grupo anterior</button>
+    <button onclick="nextGroup()">Siguiente grupo</button>
+
+    <script>
+        const wordGroups = [
+    [
+        { word: 'Commuters', definition: 'People who travel regularly between home and work.' },
+        { word: 'The Crew', definition: 'A group of people working together, especially on a ship or aircraft.' },
+        { word: 'Employees', definition: 'Individuals hired to work for a company or organization.' },
+        { word: 'Employers', definition: 'People or organizations that hire others to work for them.' },
+        { word: 'Immigrants', definition: 'Individuals who move to a new country to live permanently.' },
+        { word: 'Inhabitants', definition: 'People who live in a particular place or region.' }
+    ],
+    [
+        { word: 'Motorists', definition: 'Drivers of motor vehicles.' },
+        { word: 'Pedestrians', definition: 'People who walk, especially in urban areas.' },
+        { word: 'Politicians', definition: 'Individuals involved in politics, often holding or seeking office.' },
+        { word: 'Refugees', definition: 'People who flee their country due to persecution or danger.' },
+        { word: 'Residents', definition: 'People who live in a specific place.' },
+        { word: 'The Staff', definition: 'A group of people employed to assist in the operations of an organization.' }
+    ],
+    [
+        { word: 'Board', definition: 'A group of individuals who manage or oversee an organization.' },
+        { word: 'Cast', definition: 'The group of actors in a play, movie, or show.' },
+        { word: 'Household', definition: 'A group of people living together in a single home.' },
+        { word: 'Squad', definition: 'A small group organized for a specific purpose or task.' },
+        { word: 'Troupe', definition: 'A group of performers, especially in theater or dance.' }
+    ],
+    [
+        { word: 'Bring about', definition: 'To cause something to happen.' },
+        { word: 'Go through', definition: 'To experience or endure something.' },
+        { word: 'Pick up', definition: 'To collect someone or something.' },
+        { word: 'Put up with', definition: 'To tolerate or endure something unpleasant.' },
+        { word: 'Set out for', definition: 'To begin a journey towards a destination.' }
+    ],
+    [
+        { word: 'Touch down', definition: 'To land, especially in aviation.' },
+        { word: 'Turn out', definition: 'To result in a particular way; to happen.' },
+        { word: 'Wear out', definition: 'To use something until it is no longer functional or effective.' },
+        { word: 'Immunity', definition: 'The ability of an organism to resist infection or disease.' },
+        { word: 'Diet', definition: 'The kinds of food that a person, animal, or community habitually eats.' }
+    ],
+    [
+        { word: 'Clans', definition: 'Groups of families or households that share a common ancestor.' },
+        { word: 'Annual', definition: 'Occurring once every year.' },
+        { word: 'Remain', definition: 'To continue to exist or stay in the same place.' },
+        { word: 'Extinct', definition: 'No longer in existence; having no living members.' },
+        { word: 'Destination', definition: 'The place to which someone or something is going.' }
+    ],
+    [
+        { word: 'Borders', definition: 'The edges or boundaries of a country or area.' },
+        { word: 'Crawl', definition: 'To move on hands and knees or to move slowly.' },
+        { word: 'Guilty', definition: 'Responsible for a specified wrongdoing.' },
+        { word: 'Puzzled', definition: 'Confused or unable to understand something.' },
+        { word: 'Ran into', definition: 'To meet someone unexpectedly.' }
+    ],
+    [
+        { word: 'Rushing', definition: 'Moving quickly or with urgency.' },
+        { word: 'Stuck', definition: 'Unable to move or be moved.' },
+        { word: 'Turned out', definition: 'To conclude or result in a particular way.' },
+        { word: 'Wandering', definition: 'Moving about without a fixed course or destination.' },
+        { word: 'Worn out', definition: 'Exhausted or used to the point of being unusable.' }
+    ]
+        [
+        { word: 'Commuters', definition: 'People who travel regularly between home and work.' },
+        { word: 'The Crew', definition: 'A group of people working together, especially on a ship or aircraft.' },
+        { word: 'Employees', definition: 'Individuals hired to work for a company or organization.' },
+        { word: 'Employers', definition: 'People or organizations that hire others to work for them.' },
+        { word: 'Immigrants', definition: 'Individuals who move to a new country to live permanently.' },
+        { word: 'Inhabitants', definition: 'People who live in a particular place or region.' }
+    ],
+    [
+        { word: 'Motorists', definition: 'Drivers of motor vehicles.' },
+        { word: 'Pedestrians', definition: 'People who walk, especially in urban areas.' },
+        { word: 'Politicians', definition: 'Individuals involved in politics, often holding or seeking office.' },
+        { word: 'Refugees', definition: 'People who flee their country due to persecution or danger.' },
+        { word: 'Residents', definition: 'People who live in a specific place.' },
+        { word: 'The Staff', definition: 'A group of people employed to assist in the operations of an organization.' }
+    ],
+    [
+        { word: 'Board', definition: 'A group of individuals who manage or oversee an organization.' },
+        { word: 'Cast', definition: 'The group of actors in a play, movie, or show.' },
+        { word: 'Household', definition: 'A group of people living together in a single home.' },
+        { word: 'Squad', definition: 'A small group organized for a specific purpose or task.' },
+        { word: 'Troupe', definition: 'A group of performers, especially in theater or dance.' }
+    ],
+    [
+        { word: 'Bring about', definition: 'To cause something to happen.' },
+        { word: 'Go through', definition: 'To experience or endure something.' },
+        { word: 'Pick up', definition: 'To collect someone or something.' },
+        { word: 'Put up with', definition: 'To tolerate or endure something unpleasant.' },
+        { word: 'Set out for', definition: 'To begin a journey towards a destination.' }
+    ],
+    [
+        { word: 'Touch down', definition: 'To land, especially in aviation.' },
+        { word: 'Turn out', definition: 'To result in a particular way; to happen.' },
+        { word: 'Wear out', definition: 'To use something until it is no longer functional or effective.' },
+        { word: 'Immunity', definition: 'The ability of an organism to resist infection or disease.' },
+        { word: 'Diet', definition: 'The kinds of food that a person, animal, or community habitually eats.' }
+    ],
+    [
+        { word: 'Clans', definition: 'Groups of families or households that share a common ancestor.' },
+        { word: 'Annual', definition: 'Occurring once every year.' },
+        { word: 'Remain', definition: 'To continue to exist or stay in the same place.' },
+        { word: 'Extinct', definition: 'No longer in existence; having no living members.' },
+        { word: 'Destination', definition: 'The place to which someone or something is going.' }
+    ],
+    [
+        { word: 'Borders', definition: 'The edges or boundaries of a country or area.' },
+        { word: 'Crawl', definition: 'To move on hands and knees or to move slowly.' },
+        { word: 'Guilty', definition: 'Responsible for a specified wrongdoing.' },
+        { word: 'Puzzled', definition: 'Confused or unable to understand something.' },
+        { word: 'Ran into', definition: 'To meet someone unexpectedly.' }
+    ],
+    [
+        { word: 'Rushing', definition: 'Moving quickly or with urgency.' },
+        { word: 'Stuck', definition: 'Unable to move or be moved.' },
+        { word: 'Turned out', definition: 'To conclude or result in a particular way.' },
+        { word: 'Wandering', definition: 'Moving about without a fixed course or destination.' },
+        { word: 'Worn out', definition: 'Exhausted or used to the point of being unusable.' }
+    ]
+
+            
+   ];
+
+        let correctCount = 0;
+        let currentGroupIndex = 0;
+        let remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo actual
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Mezclar las palabras del grupo actual
+        shuffle(remainingWords);
+
+        function updateCard() {
+            if (remainingWords.length > 0) {
+                document.getElementById('definition').textContent = remainingWords[0].definition;
+                document.getElementById('answer').value = '';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+            } else {
+                document.getElementById('feedback').textContent = 'Has completado este grupo!';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+            if (userAnswer.toLowerCase() === remainingWords[0].word.toLowerCase()) {
+                feedback.textContent = 'Correcto!';
+                feedback.className = 'feedback correct';
+                correctCount++;
+                remainingWords.splice(0, 1); // Eliminar palabra correcta
+                document.getElementById('correctCount').textContent = correctCount;
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+                setTimeout(updateCard, 1000); // Cambiar de tarjeta después de 1 segundo
+            } else {
+                feedback.textContent = 'Incorrecto! Intenta de nuevo.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showSolution() {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = `La palabra correcta es: ${remainingWords[0].word}`;
+            feedback.className = 'feedback correct';
+        }
+
+        function nextGroup() {
+            if (currentGroupIndex < wordGroups.length - 1) {
+                currentGroupIndex++;
+                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el siguiente grupo
+                shuffle(remainingWords); // Mezclar las palabras del grupo
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            } else {
+                alert('¡Has completado todos los grupos!');
+            }
+        }
+
+        function previousGroup() {
+            if (currentGroupIndex > 0) {
+                currentGroupIndex--;
+                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo anterior
+                shuffle(remainingWords); // Mezclar las palabras del grupo
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            }
+        }
+
+        document.getElementById('answer').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Inicializar la primera tarjeta
+        updateCard();
+    </script>
+
+</body>
+</html>
