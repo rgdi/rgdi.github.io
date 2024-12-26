@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trim 1-2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+        }
+        .definition {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Vocabulario Trimestre 1 2024</h1>
+
+    <div class="stats">
+        <p>Correctas: <span id="correctCount">0</span></p>
+        <p>Quedan: <span id="remainingCount">10</span></p>
+        <p>Grupo: <span id="groupCount">1</span></p>
+    </div>
+
+    <div class="card">
+        <div class="definition" id="definition">To collect or assemble things together.</div>
+        <input type="text" id="answer" placeholder="Escribe la palabra...">
+        <button onclick="checkAnswer()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <button onclick="previousGroup()">Grupo anterior</button>
+    <button onclick="nextGroup()">Siguiente grupo</button>
+
+    <script>
+        const wordGroups = [
+    [
+        { word: 'sena*cosb+senb*cosa', definition: 'sen(a+b)=' },
+        { word: 'cosa*cosb-sena*senb', definition: 'cos(a+b)=' },
+        { word: '(tga+tgb)/(1-tga*tgb)', definition: 'tg(a+b)=' },
+    ],
+    [
+        { word: 'sena*cosb-senb*cosa', definition: 'sen(a-b)=' },
+        { word: 'cosa*cosb+sena*senb', definition: 'cos(a-b)=' },
+        { word: '(tga-tgb)/(1+tga*tgb)', definition: 'tg(a-b)=' },
+    ],
+    [
+        { word: '2sena*cosa', definition: 'sen2a=' },
+        { word: 'cos²a-sen²a', definition: 'cos2a=' },
+        { word: '(2tga)/(1-tg²a)', definition: 'tg2a=' },
+    ],
+    [
+        { word: '+-R((1-cosa)/2)', definition: 'sen(a/2)=' },
+        { word: '+-R((1+cosa)/2)', definition: 'cos(a/2)=' },
+        { word: '+-R((1-cosa)/(1+cosa))', definition: 'tg(a/2)=' },
+    ],
+    [
+        { word: '2sen((A+B)/2)*cos((A-B)/2)', definition: 'sen A + sen B=' },
+        { word: '2cos((A+B)/2)*sen((A-B)/2)', definition: 'sen A - sen B=' },
+        { word: '2cos((A+B)/2)*cos((A-B)/2)', definition: 'cos A + cos B=' },
+        { word: '-2sen((A+B)/2)*sen((A-B)/2)', definition: 'cos A - cos B=' },
+        
+    ]
+   ];
+
+        let correctCount = 0;
+        let currentGroupIndex = 0;
+        let remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo actual
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Mezclar las palabras del grupo actual
+        shuffle(remainingWords);
+
+        function updateCard() {
+            if (remainingWords.length > 0) {
+                document.getElementById('definition').textContent = remainingWords[0].definition;
+                document.getElementById('answer').value = '';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+            } else {
+                document.getElementById('feedback').textContent = 'Has completado este grupo!';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+            if (userAnswer.toLowerCase() === remainingWords[0].word.toLowerCase()) {
+                feedback.textContent = 'Correcto!';
+                feedback.className = 'feedback correct';
+                correctCount++;
+                remainingWords.splice(0, 1); // Eliminar palabra correcta
+                document.getElementById('correctCount').textContent = correctCount;
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+                setTimeout(updateCard, 1000); // Cambiar de tarjeta después de 1 segundo
+            } else {
+                feedback.textContent = 'Incorrecto! Intenta de nuevo.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showSolution() {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = `La palabra correcta es: ${remainingWords[0].word}`;
+            feedback.className = 'feedback correct';
+        }
+
+        function nextGroup() {
+            if (currentGroupIndex < wordGroups.length - 1) {
+                currentGroupIndex++;
+                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el siguiente grupo
+                shuffle(remainingWords); // Mezclar las palabras del grupo
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            } else {
+                alert('¡Has completado todos los grupos!');
+            }
+        }
+
+        function previousGroup() {
+            if (currentGroupIndex > 0) {
+                currentGroupIndex--;
+                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo anterior
+                shuffle(remainingWords); // Mezclar las palabras del grupo
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            }
+        }
+
+        document.getElementById('answer').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Inicializar la primera tarjeta
+        updateCard();
+    </script>
+
+</body>
+</html>
