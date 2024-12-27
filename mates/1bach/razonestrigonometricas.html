@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trigonometria</title>
+    <title>Trigonometría</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: #000;
         }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+
         .card {
             background-color: white;
             border-radius: 8px;
@@ -18,11 +26,19 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             width: 300px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
         .definition {
             font-size: 16px;
             margin-bottom: 10px;
         }
+
         input {
             width: 100%;
             padding: 8px;
@@ -30,17 +46,28 @@
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        body.dark-mode input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
         .feedback {
             font-size: 14px;
             margin-top: 10px;
         }
+
         .correct {
             color: green;
         }
+
         .incorrect {
             color: red;
         }
+
         button {
             padding: 10px 15px;
             background-color: #007BFF;
@@ -49,35 +76,27 @@
             border-radius: 4px;
             cursor: pointer;
             margin-right: 10px;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #0056b3;
         }
-        .stats {
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        body.dark-mode .card {
-            background-color: #1e1e1e;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-        }
-        button {
-          background-color: #007BFF;
-        }
+
         body.dark-mode button {
-            background-color: #1a73e8;
+            background-color: #555;
+            color: #fff;
         }
-        body.dark-mode button:hover {
-            background-color: #1358a3;
-        }
-        #darkModeToggle {
+
+        #controlButtons {
             position: fixed;
             top: 10px;
             right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #controlButtons button {
             background: transparent;
             border: none;
             font-size: 24px;
@@ -85,19 +104,28 @@
             color: #000;
             transition: color 0.3s ease, transform 0.3s ease;
         }
-        #darkModeToggle:hover {
-        transform: scale(1.1);
+
+        #controlButtons button:hover {
+            transform: scale(1.1);
         }
-        body.dark-mode #darkModeToggle {
+
+        body.dark-mode #controlButtons button {
             color: #fff;
         }
 
-
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    <div id="controlButtons">
+        <button id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">🌙</button>
+        <button id="resetButton" onclick="resetGame()" aria-label="Reset Game">🔄</button>
+    </div>
 
-    <h1>Trigonometria</h1>
+    <h1>Trigonometría</h1>
 
     <div class="stats">
         <p>Correctas: <span id="correctCount">0</span></p>
@@ -115,45 +143,6 @@
 
     <button onclick="previousGroup()">Grupo anterior</button>
     <button onclick="nextGroup()">Siguiente grupo</button>
-    
-    <button id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">🌙</button>
-    <script>
-    function setDarkMode(enable) {
-    const toggleButton = document.getElementById('darkModeToggle');
-    
-    if (enable) {
-        document.body.classList.add('dark-mode');
-        toggleButton.textContent = '☀️'; // Ícono de sol para modo claro
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        document.body.classList.remove('dark-mode');
-        toggleButton.textContent = '🌙'; // Ícono de luna para modo oscuro
-        localStorage.setItem('darkMode', 'disabled');
-    }
-}
-
-function toggleDarkMode() {
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    setDarkMode(!isDarkMode);
-}
-
-// Detectar la hora y activar modo oscuro automáticamente
-function autoDarkMode() {
-    const hour = new Date().getHours();
-    const isDarkModePreferred = hour >= 19 || hour < 7; // Oscuro de 7 PM a 7 AM
-    const savedMode = localStorage.getItem('darkMode');
-    
-    if (savedMode) {
-        setDarkMode(savedMode === 'enabled');
-    } else {
-        setDarkMode(isDarkModePreferred);
-    }
-}
-
-// Ejecutar al cargar la página
-autoDarkMode();
-
-    </script>
 
     <script>
         const wordGroups = [
@@ -188,7 +177,7 @@ autoDarkMode();
 
         let correctCount = 0;
         let currentGroupIndex = 0;
-        let remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo actual
+        let remainingWords = [...wordGroups[currentGroupIndex]];
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -197,7 +186,6 @@ autoDarkMode();
             }
         }
 
-        // Mezclar las palabras del grupo actual
         shuffle(remainingWords);
 
         function updateCard() {
@@ -218,10 +206,10 @@ autoDarkMode();
                 feedback.textContent = 'Correcto!';
                 feedback.className = 'feedback correct';
                 correctCount++;
-                remainingWords.splice(0, 1); // Eliminar palabra correcta
+                remainingWords.splice(0, 1);
                 document.getElementById('correctCount').textContent = correctCount;
                 document.getElementById('remainingCount').textContent = remainingWords.length;
-                setTimeout(updateCard, 1000); // Cambiar de tarjeta después de 1 segundo
+                setTimeout(updateCard, 1000);
             } else {
                 feedback.textContent = 'Incorrecto! Intenta de nuevo.';
                 feedback.className = 'feedback incorrect';
@@ -237,8 +225,8 @@ autoDarkMode();
         function nextGroup() {
             if (currentGroupIndex < wordGroups.length - 1) {
                 currentGroupIndex++;
-                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el siguiente grupo
-                shuffle(remainingWords); // Mezclar las palabras del grupo
+                remainingWords = [...wordGroups[currentGroupIndex]];
+                shuffle(remainingWords);
                 document.getElementById('groupCount').textContent = currentGroupIndex + 1;
                 updateCard();
             } else {
@@ -249,11 +237,44 @@ autoDarkMode();
         function previousGroup() {
             if (currentGroupIndex > 0) {
                 currentGroupIndex--;
-                remainingWords = [...wordGroups[currentGroupIndex]]; // Clonar el grupo anterior
-                shuffle(remainingWords); // Mezclar las palabras del grupo
+                remainingWords = [...wordGroups[currentGroupIndex]];
+                shuffle(remainingWords);
                 document.getElementById('groupCount').textContent = currentGroupIndex + 1;
                 updateCard();
             }
+        }
+
+        function setDarkMode(enable) {
+            const toggleButton = document.getElementById('darkModeToggle');
+            if (enable) {
+                document.body.classList.add('dark-mode');
+                toggleButton.textContent = '☀️';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark-mode');
+                toggleButton.textContent = '🌙';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            setDarkMode(!isDarkMode);
+        }
+
+        function autoDarkMode() {
+            const hour = new Date().getHours();
+            const isDarkModePreferred = hour >= 19 || hour < 7;
+            const savedMode = localStorage.getItem('darkMode');
+            if (savedMode) {
+                setDarkMode(savedMode === 'enabled');
+            } else {
+                setDarkMode(isDarkModePreferred);
+            }
+        }
+
+        function resetGame() {
+            location.reload();
         }
 
         document.getElementById('answer').addEventListener('keydown', function (event) {
@@ -262,9 +283,8 @@ autoDarkMode();
             }
         });
 
-        // Inicializar la primera tarjeta
+        autoDarkMode();
         updateCard();
     </script>
-
 </body>
 </html>
