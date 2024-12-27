@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trim 1-2024</title>
+    <title>Trigonometria</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,11 +57,47 @@
             font-size: 14px;
             margin-bottom: 20px;
         }
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+        button {
+          background-color: #007BFF;
+        }
+        body.dark-mode button {
+            background-color: #1a73e8;
+        }
+        body.dark-mode button:hover {
+            background-color: #1358a3;
+        }
+        #darkModeToggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #000;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        #darkModeToggle:hover {
+        transform: scale(1.1);
+        }
+        body.dark-mode #darkModeToggle {
+            color: #fff;
+        }
+
+
     </style>
 </head>
 <body>
 
-    <h1>Vocabulario Trimestre 1 2024</h1>
+    <h1>Trigonometria</h1>
 
     <div class="stats">
         <p>Correctas: <span id="correctCount">0</span></p>
@@ -79,6 +115,45 @@
 
     <button onclick="previousGroup()">Grupo anterior</button>
     <button onclick="nextGroup()">Siguiente grupo</button>
+    
+    <button id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">🌙</button>
+    <script>
+    function setDarkMode(enable) {
+    const toggleButton = document.getElementById('darkModeToggle');
+    
+    if (enable) {
+        document.body.classList.add('dark-mode');
+        toggleButton.textContent = '☀️'; // Ícono de sol para modo claro
+        localStorage.setItem('darkMode', 'enabled');
+    } else {
+        document.body.classList.remove('dark-mode');
+        toggleButton.textContent = '🌙'; // Ícono de luna para modo oscuro
+        localStorage.setItem('darkMode', 'disabled');
+    }
+}
+
+function toggleDarkMode() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    setDarkMode(!isDarkMode);
+}
+
+// Detectar la hora y activar modo oscuro automáticamente
+function autoDarkMode() {
+    const hour = new Date().getHours();
+    const isDarkModePreferred = hour >= 19 || hour < 7; // Oscuro de 7 PM a 7 AM
+    const savedMode = localStorage.getItem('darkMode');
+    
+    if (savedMode) {
+        setDarkMode(savedMode === 'enabled');
+    } else {
+        setDarkMode(isDarkModePreferred);
+    }
+}
+
+// Ejecutar al cargar la página
+autoDarkMode();
+
+    </script>
 
     <script>
         const wordGroups = [
