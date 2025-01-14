@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Unit 3 2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: #000;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .definition {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        body.dark-mode button {
+            background-color: #555;
+            color: #fff;
+        }
+
+        #controlButtons {
+            position: fixed;
+            top: 10px;
+            right: 5px;
+            display: flex;
+            gap: 1px;
+        }
+
+        #controlButtons button {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #000;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        #controlButtons button:hover {
+            transform: scale(1.1);
+        }
+
+        body.dark-mode #controlButtons button {
+            color: #fff;
+        }
+
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controlButtons">
+        <button id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">🌙</button>
+        <button id="resetButton" onclick="resetGame()" aria-label="Reset Game">🔄</button>
+    </div>
+
+    <h1>Conjugaciones verbales</h1>
+
+    <div class="stats">
+        <p>Correctas: <span id="correctCount">0</span></p>
+        <p>Quedan: <span id="remainingCount">10</span></p>
+    </div>
+
+    <div class="card">
+        <div class="definition" id="definition">To collect or assemble things together.</div>
+        <input type="text" id="answer" placeholder="Escribe la palabra...">
+        <button onclick="checkAnswer()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+    const verbForms = {
+        "Presente de Indicativo": ['hablo', 'hablas', 'hablamos', 'habláis', 'hablan'],
+        "Pretérito Imperfecto de Indicativo": ['hablaba', 'hablabas', 'hablábamos', 'hablabais', 'hablaban'],
+        "Pretérito Perfecto Simple de Indicativo": ['hablé', 'hablaste', 'hablamos', 'hablasteis', 'hablaron'],
+        "Futuro de Indicativo": ['hablaré', 'hablarás', 'hablaremos', 'hablaréis', 'hablarán'],
+        "Condicional de Indicativo": ['hablaría', 'hablarías', 'hablaríamos', 'hablaríais', 'hablarían'],
+        "Presente de Subjuntivo": ['hable', 'hables', 'hablemos', 'habléis', 'hablen'],
+        "Imperfecto de Subjuntivo": ['hablara', 'hablaras', 'habláramos', 'hablarais', 'hablaran'],
+        "Futuro de Subjuntivo": ['hablare', 'hablares', 'habláremos', 'hablareis', 'hablaren'],
+        "Imperativo": ['habla', 'hable', 'hablemos', 'hablad', 'hablen']
+    };
+
+    let correctCount = 0;
+    let allConjugations = [];
+
+    // Get all conjugations into a flat array
+    for (let group in verbForms) {
+        allConjugations = allConjugations.concat(verbForms[group]);
+    }
+
+    let currentForm = '';  // Variable to store the current form for "Ayuda" and checking.
+
+    function getRandomVerbForm() {
+        if (allConjugations.length === 0) {
+            document.getElementById('feedback').textContent = '¡Has completado todas las conjugaciones!';
+            return;
+        }
+        // Pick a random conjugation from the list
+        currentForm = allConjugations[Math.floor(Math.random() * allConjugations.length)];
+        document.getElementById('definition').textContent = `¿A qué tiempo verbal pertenece? ${currentForm}`;
+        document.getElementById('answer').value = '';
+        document.getElementById('feedback').textContent = '';
+    }
+
+    // Helper function to find the group for a given form
+    function getGroupForForm(form) {
+        for (let group in verbForms) {
+            if (verbForms[group].includes(form)) {
+                return group;
+            }
+        }
+        return '';
+    }
+
+    document.addEventListener('DOMContentLoaded', getRandomVerbForm);
+
+    function checkAnswer() {
+        const userAnswer = document.getElementById('answer').value.trim();
+        const feedback = document.getElementById('feedback');
+        const correctGroup = getGroupForForm(currentForm);
+
+        if (userAnswer.toLowerCase() === correctGroup.toLowerCase()) {
+            feedback.textContent = '¡Correcto!';
+            feedback.className = 'feedback correct';
+            correctCount++;
+            document.getElementById('correctCount').textContent = correctCount;
+            setTimeout(getRandomVerbForm, 1000);
+        } else {
+            feedback.textContent = 'Incorrecto, intenta de nuevo.';
+            feedback.className = 'feedback incorrect';
+        }
+    }
+
+    function showSolution() {
+        const feedback = document.getElementById('feedback');
+        const correctGroup = getGroupForForm(currentForm);
+        feedback.textContent = `La respuesta correcta es: ${correctGroup}`;
+        feedback.className = 'feedback correct';
+    }
+
+    function setDarkMode(enable) {
+        const toggleButton = document.getElementById('darkModeToggle');
+        if (enable) {
+            document.body.classList.add('dark-mode');
+            toggleButton.textContent = '☀️';
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            document.body.classList.remove('dark-mode');
+            toggleButton.textContent = '🌙';
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    }
+
+    function toggleDarkMode() {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        setDarkMode(!isDarkMode);
+    }
+
+    function autoDarkMode() {
+        const hour = new Date().getHours();
+        const isDarkModePreferred = hour >= 19 || hour < 7;
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode) {
+            setDarkMode(savedMode === 'enabled');
+        } else {
+            setDarkMode(isDarkModePreferred);
+        }
+    }
+
+    function resetGame() {
+        location.reload();
+    }
+
+    document.getElementById('answer').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    autoDarkMode();
+    </script>
+</body>
+</html>

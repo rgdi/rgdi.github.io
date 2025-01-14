@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary unit3 2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: #000;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .definition {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .feedback {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        body.dark-mode button {
+            background-color: #555;
+            color: #fff;
+        }
+
+        #controlButtons {
+            position: fixed;
+            top: 10px;
+            right: 5px;
+            display: flex;
+            gap: 1px;
+        }
+
+        #controlButtons button {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #000;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        #controlButtons button:hover {
+            transform: scale(1.1);
+        }
+
+        body.dark-mode #controlButtons button {
+            color: #fff;
+        }
+
+        .stats {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controlButtons">
+        <button id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">🌙</button>
+        <button id="resetButton" onclick="resetGame()" aria-label="Reset Game">🔄</button>
+    </div>
+
+    <h1>Vocabulary Unit 3 2024</h1>
+
+    <div class="stats">
+        <p>Correctas: <span id="correctCount">0</span></p>
+        <p>Quedan: <span id="remainingCount">10</span></p>
+        <p>Grupo: <span id="groupCount">1</span></p>
+    </div>
+
+    <div class="card">
+        <div class="definition" id="definition">To collect or assemble things together.</div>
+        <input type="text" id="answer" placeholder="Escribe la palabra...">
+        <button onclick="checkAnswer()">Comprobar</button>
+        <button onclick="showSolution()">Ayuda</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <button onclick="previousGroup()">Grupo anterior</button>
+    <button onclick="nextGroup()">Siguiente grupo</button>
+
+    <script>
+        const wordGroups = [
+        [
+    { word: 'loads', definition: 'A large amount or number of something.' },
+    { word: 'most', definition: 'The greatest amount or number.' },
+    { word: 'hardly any', definition: 'Almost none; very little.' },
+    { word: 'get ahead in life', definition: 'To be successful in life.' },
+    { word: 'leather jacket', definition: 'A jacket made of leather.' },
+    ],
+    [
+    { word: 'wig', definition: 'A covering for the head made of artificial or real hair.' },
+    { word: 'snorkel', definition: 'A breathing tube used for swimming underwater.' },
+    { word: 'soft', definition: 'Not hard or firm to the touch.' },
+    { word: 'poncho', definition: 'A loose, sleeveless cloak.' },
+    { word: 'helmet', definition: 'A protective covering for the head.' },
+    ],
+    [
+    { word: 'bathrobe', definition: 'A loose-fitting robe worn before or after bathing.' },
+    { word: 'mask', definition: 'A covering for the face, used for disguise or protection.' },
+    { word: 'apron', definition: 'A protective garment worn over clothes.' },
+    { word: 'football top', definition: 'A shirt worn for playing football.' },
+    { word: 'sword and shield', definition: 'A weapon (sword) and a protective device (shield) used in combat.' },
+    ],
+    [
+    { word: 'costume', definition: 'Clothes worn to look like someone or something else.' },
+    { word: 'dressed up', definition: 'Wearing formal or special clothes.' },
+    { word: 'bring up', definition: 'To raise or educate a child.' },
+    { word: 'do your best', definition: 'To try as hard as possible.' },
+    { word: 'grow up', definition: 'To become an adult.' },
+    ],
+    [
+    { word: 'raise', definition: 'To bring up or take care of a child.' },
+    { word: 'strict', definition: 'Enforcing rules firmly.' },
+    { word: 'little', definition: 'A small amount.' },
+    { word: 'all', definition: 'The whole amount.' },
+    { word: 'several', definition: 'More than two but not many.' },
+    ],
+    [
+    { word: 'none', definition: 'Not any.' },
+    { word: 'hardly any', definition: 'Almost none.' },
+    { word: 'get older', definition: 'To age; to grow older.' },
+    { word: 'be a success', definition: 'To achieve success.' },
+    { word: 'make advances in life', definition: 'To progress or improve in life.' },
+    { word: 'ridiculous', definition: 'Very silly or unreasonable.' },
+    ],
+    [
+    { word: 'trendy', definition: 'Fashionable or stylish.' },
+    { word: 'off her head', definition: 'Crazy or not in control.' },
+    { word: 'mess it up', definition: 'To do something badly or make a mistake.' },
+    { word: 'straightforward', definition: 'Easy to understand; simple.' },
+    { word: 'didn\'t have a clue', definition: 'Had no knowledge or understanding.' },
+    { word: 'reckoned', definition: 'Thought or believed.' },
+    ],
+    [
+    { word: 'whichever way', definition: 'No matter which direction or choice.' },
+    { word: 'childcare', definition: 'The care of children by others.' },
+    { word: 'childproof', definition: 'Made safe for children.' },
+    { word: 'curfew', definition: 'A set time to be home.' },
+    { word: 'ground', definition: 'To punish a child by not allowing them to go out.' },
+    ],
+    [
+    { word: 'spoil', definition: 'To ruin or damage; to overindulge a child.' },
+    { word: 'home school', definition: 'To educate a child at home instead of school.' }
+]
+   ];
+
+        let correctCount = 0;
+        let currentGroupIndex = 0;
+        let remainingWords = [...wordGroups[currentGroupIndex]];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        shuffle(remainingWords);
+
+        function updateCard() {
+            if (remainingWords.length > 0) {
+                document.getElementById('definition').textContent = remainingWords[0].definition;
+                document.getElementById('answer').value = '';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+            } else {
+                document.getElementById('feedback').textContent = 'Has completado este grupo!';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim();
+            const feedback = document.getElementById('feedback');
+            if (userAnswer.toLowerCase() === remainingWords[0].word.toLowerCase()) {
+                feedback.textContent = 'Correcto!';
+                feedback.className = 'feedback correct';
+                correctCount++;
+                remainingWords.splice(0, 1);
+                document.getElementById('correctCount').textContent = correctCount;
+                document.getElementById('remainingCount').textContent = remainingWords.length;
+                setTimeout(updateCard, 1000);
+            } else {
+                feedback.textContent = 'Incorrecto! Intenta de nuevo.';
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function showSolution() {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = `La palabra correcta es: ${remainingWords[0].word}`;
+            feedback.className = 'feedback correct';
+        }
+
+        function nextGroup() {
+            if (currentGroupIndex < wordGroups.length - 1) {
+                currentGroupIndex++;
+                remainingWords = [...wordGroups[currentGroupIndex]];
+                shuffle(remainingWords);
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            } else {
+                alert('¡Has completado todos los grupos!');
+            }
+        }
+
+        function previousGroup() {
+            if (currentGroupIndex > 0) {
+                currentGroupIndex--;
+                remainingWords = [...wordGroups[currentGroupIndex]];
+                shuffle(remainingWords);
+                document.getElementById('groupCount').textContent = currentGroupIndex + 1;
+                updateCard();
+            }
+        }
+
+        function setDarkMode(enable) {
+            const toggleButton = document.getElementById('darkModeToggle');
+            if (enable) {
+                document.body.classList.add('dark-mode');
+                toggleButton.textContent = '☀️';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark-mode');
+                toggleButton.textContent = '🌙';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            setDarkMode(!isDarkMode);
+        }
+
+        function autoDarkMode() {
+            const hour = new Date().getHours();
+            const isDarkModePreferred = hour >= 19 || hour < 7;
+            const savedMode = localStorage.getItem('darkMode');
+            if (savedMode) {
+                setDarkMode(savedMode === 'enabled');
+            } else {
+                setDarkMode(isDarkModePreferred);
+            }
+        }
+
+        function resetGame() {
+            location.reload();
+        }
+
+        document.getElementById('answer').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        autoDarkMode();
+        updateCard();
+    </script>
+</body>
+</html>
